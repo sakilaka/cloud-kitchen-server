@@ -128,7 +128,6 @@ async function run() {
                 }
             }
             const cursor = reviewCollection.find(query).sort({ _id: -1 });
-            // const cursor = reviewCollection.find(query, sort);
             const reviews = await cursor.toArray();
             res.send(reviews);
         })
