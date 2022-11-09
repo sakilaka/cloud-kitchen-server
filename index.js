@@ -120,7 +120,7 @@ async function run() {
             }
 
             const queryEmail = req.query.email;
-            // let query = {};
+            let query = {};
             if (req.query.email) {
                 query = {
                     email: queryEmail
