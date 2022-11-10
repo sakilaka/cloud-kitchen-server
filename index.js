@@ -90,28 +90,6 @@ async function run() {
             res.send(result);
         })
 
-
-        app.put('/reviews/:id', async (req, res) => {
-            const id = req.params.id;
-            const filter = { _id: ObjectId(id) };
-            const updateReview = req.body;
-            // console.log(updateReview);
-            const option = { upsert: true };
-            const updatedReview = {
-                $set: {
-                    foodID: updateReview.foodID,
-                    foodName: updateReview.foodName,
-                    email: updateReview.email,
-                    name: updateReview.name,
-                    photoURL: updateReview.photoURL,
-                    rating: updateReview.rating,
-                    message: updateReview.message
-                }
-            }
-            const result = await reviewCollection.updateOne(filter, updatedReview, option);
-            res.send(result);
-        })
-
         app.get('/reviews', verifyJWT, async (req, res) => {
             const decoded = req.decoded;
             console.log('decode', decoded);
@@ -128,25 +106,45 @@ async function run() {
                     email: queryEmail
                 }
             }
-            const cursore = reviewCollection.find(query).sort({ _id: -1 });
-            const reviews = await cursore.toArray();
+            const cursor = reviewCollection.find(query).sort({ _id: -1 });
+            const reviews = await cursor.toArray();
             res.send(reviews);
         })
 
-        app.get('/reviews', async (req, res) => {
-            let queryID = {};
+
+        app.put('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const updateReview = req.body;
+            const option = { upsert: true };
+            const updatedReview = {
+                $set: {
+                    foodID: updateReview.foodID,
+                    foodName: updateReview.foodName,
+                    email: updateReview.email,
+                    name: updateReview.name,
+                    photoURL: updateReview.photoURL,
+                    rating: updateReview.rating,
+                    message: updateReview.message
+                }
+            }
+            const result = await reviewCollection.updateOne(filter, updatedReview, option);
+            res.send(result);
+        })
+
+        app.get('/reviewsId', async (req, res) => {
+            let query = {};
             if (req.query.foodID) {
-                queryID = {
+                query = {
                     foodID: req.query.foodID
                 }
             }
-            const cursor = reviewCollection.find(queryID);
+            const cursor = reviewCollection.find(query).sort({ _id: -1 });
             const result = await cursor.toArray();
             res.send(result)
         })
 
-       
-
+    
         app.get('/reviews/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -160,6 +158,9 @@ async function run() {
             const result = await reviewCollection.deleteOne(query)
             res.send(result);
         })
+
+
+        
 
     }
     catch {
