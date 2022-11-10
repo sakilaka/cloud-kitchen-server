@@ -90,17 +90,6 @@ async function run() {
             res.send(result);
         })
 
-        app.get('/reviews', async (req, res) => {
-            let query = {};
-            if (req.query.foodID) {
-                query = {
-                    foodID: req.query.foodID
-                }
-            }
-            const cursor = reviewCollection.find(query);
-            const result = await cursor.toArray();
-            res.send(result)
-        })
 
         app.put('/reviews/:id', async (req, res) => {
             const id = req.params.id;
@@ -132,16 +121,31 @@ async function run() {
             }
 
             const queryEmail = req.query.email;
+            console.log(queryEmail);
             let query = {};
             if (req.query.email) {
                 query = {
                     email: queryEmail
                 }
             }
-            const cursor = reviewCollection.find(query).sort({ _id: -1 });
-            const reviews = await cursor.toArray();
+            const cursore = reviewCollection.find(query).sort({ _id: -1 });
+            const reviews = await cursore.toArray();
             res.send(reviews);
         })
+
+        app.get('/reviews', async (req, res) => {
+            let queryID = {};
+            if (req.query.foodID) {
+                queryID = {
+                    foodID: req.query.foodID
+                }
+            }
+            const cursor = reviewCollection.find(queryID);
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
+       
 
         app.get('/reviews/:id', async (req, res) => {
             const id = req.params.id;
