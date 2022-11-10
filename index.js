@@ -90,6 +90,18 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/reviews', async (req, res) => {
+            let query = {};
+            if (req.query.foodID) {
+                query = {
+                    foodID: req.query.foodID
+                }
+            }
+            const cursor = reviewCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
         app.put('/reviews/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
